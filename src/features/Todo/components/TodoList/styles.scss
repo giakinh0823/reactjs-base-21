@@ -1,0 +1,19 @@
+.todo-list {
+    list-style: none;
+    width: 50%;
+    margin: 0 auto;
+    padding: 40px 0;
+    & > li {
+        cursor: pointer;
+        font-weight: 300;
+        font-size: 40px;
+        margin: 5px 0;
+        color: #3f50b5,
+    }
+
+    & > li.completed {
+        font-style: italic;
+        text-decoration: line-through;
+        color: #3f51b669,
+    }
+}
