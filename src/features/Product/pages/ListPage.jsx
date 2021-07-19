@@ -82,7 +82,7 @@ function ListPage(props) {
                 console.log("Fail to featch")
             }
         })()
-    }, [categoryList])
+    }, [])
 
     useEffect(() => {
         ; (async () => {
