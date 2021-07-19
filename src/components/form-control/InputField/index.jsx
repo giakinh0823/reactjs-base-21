@@ -17,7 +17,7 @@ function InputField(props) {
 
     const { form, name, label, disabled } = props
     const { formState: { errors } } = form
-    const hasError =  errors[name]
+    const hasError = errors[name]
 
     return (
         <div>
@@ -37,8 +37,8 @@ function InputField(props) {
                 )}
             />
             <FormHelperText error={!!hasError}>
-                    {errors[name]?.message}
-                </FormHelperText>
+                {errors[name]?.message}
+            </FormHelperText>
         </div>
     );
 }
