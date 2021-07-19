@@ -87,9 +87,9 @@ const FILTER_LIST = [
     {
         id: 4,
         getLabel: (filters, categoryList) => {
-            console.log(categoryList)
             const category = categoryList.filter(x => x.id === filters["category.id"])
-            return category[0].name
+            console.log(categoryList)
+            return category[0]?.name || "Danh mục"
         },
         isActive: () => true,
         isVisible: (filters) => Object.keys(filters).includes('category.id'),
@@ -110,6 +110,7 @@ function FilterViewer(props) {
     const visibleFilters = useMemo(() => {
         return FILTER_LIST.filter((x) => x.isVisible(filters))
     }, [filters])
+
 
     return (
         <div>

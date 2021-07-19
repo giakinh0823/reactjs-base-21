@@ -1,5 +1,7 @@
 import { Box, Container, Grid, makeStyles, Paper } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useHistory, useLocation } from "react-router-dom";
+import queryString from 'query-string';
 import productApi from '../../../api/productApi';
 import ProductList from '../components/ProductList';
 import ProductSkeletonList from '../components/ProductSkeletonList';
@@ -37,6 +39,20 @@ ListPage.propTypes = {
 
 function ListPage(props) {
     const classes = useStyles();
+    const history = useHistory();
+    const location = useLocation();
+    const queryParams = queryString.parse(location.search)
+    // const queryParams = useMemo(() => {
+    //     const params = queryString.parse(location.search);
+    //     return {
+    //         ...params,
+    //         _page: Number.parseInt(params._page) ||  1,
+    //         _limit: Number.parseInt(params._limit) ||  12,
+    //         _sort: params._sort || 'salePrice:ASC',
+    //         isPromotion: params.isPromotion === "true",
+    //         isFreeShip: params.isFreeShip === "true",
+    //     }
+    // }, [location.search])
     const [categoryList, setCategoryList] = useState([]);
     const [productList, setProductList] = useState([])
     const [loading, setLoading] = useState(true);
@@ -45,13 +61,14 @@ function ListPage(props) {
         total: 10,
         page: 1,
     })
-    const [filters, setFilters] = useState({
-        _page: 1,
-        _limit: 12,
-        _sort: 'salePrice:ASC'
-    });
 
-     
+    const [filters, setFilters] = useState(() => ({
+        ...queryParams,
+        _page: Number.parseInt(queryParams._page) || 1,
+        _limit:Number.parseInt(queryParams._limit) || 12,
+        _sort: queryParams._sort || 'salePrice:ASC'
+    }));
+
     useEffect(() => {
         ;(async () => {
             try {
@@ -81,13 +98,42 @@ function ListPage(props) {
         })();
     }, [filters])
 
-   
+    useEffect(() => {
+        ; (async () => {
+            try {
+                const response = await productApi.getAll(filters);
+                console.log(response)
+                setProductList(response.data)
+                setPagination(response.pagination)
+            } catch (error) {
+                console.log(error)
+            }
+            setLoading(false)
+        })();
+    }, [filters])
+
+    useEffect(() => {
+        history.push({
+            pathname: history.location.pathname,
+            search: queryString.stringify(filters),
+        })
+    }, [history, filters])
+
 
     const handlePageChange = (e, page) => {
         setFilters(prevFilters => ({
             ...prevFilters,
             _page: page,
         }))
+
+        // const filters = {
+        //     ...queryParams,
+        //     _page: page,
+        // }
+        // history.push({
+        //     pathname: history.location.pathname,
+        //     search: queryString.stringify(filters),
+        // })
     }
 
     const handleSortChange = (newSortValue) => {
@@ -95,6 +141,16 @@ function ListPage(props) {
             ...prevFilters,
             _sort: newSortValue,
         }))
+
+        // const filters = {
+        //     ...queryParams,
+        //     _sort: newSortValue,
+        // }
+
+        // history.push({
+        //     pathname: history.location.pathname,
+        //     search: queryString.stringify(filters),
+        // })
     }
 
     const handleFiltersChange = (newFilters) => {
@@ -102,10 +158,28 @@ function ListPage(props) {
             ...prevFilters,
             ...newFilters,
         }))
+
+        // const filters = {
+        //     ...queryParams,
+        //     ...newFilters,
+        // }
+
+        // history.push({
+        //     pathname: history.location.pathname,
+        //     search: queryString.stringify(filters),
+        // })
     }
 
     const setNewFilters = (newFilters) => {
         setFilters(newFilters)
+        // const filters = {
+        //     ...queryParams,
+        //     ...newFilters,
+        // }
+        // history.push({
+        //     pathname: history.location.pathname,
+        //     search: queryString.stringify(filters),
+        // })
     }
 
 
@@ -116,13 +190,13 @@ function ListPage(props) {
                     <Grid container spacing={1}>
                         <Grid className={classes.left} item>
                             <Paper elevation={0} >
-                                <ProductFilters filters={filters} onChange={handleFiltersChange} categoryList={categoryList}/>
+                                <ProductFilters filters={filters} onChange={handleFiltersChange} categoryList={categoryList} />
                             </Paper>
                         </Grid>
                         <Grid className={classes.right} item>
                             <Paper elevation={0} >
                                 <ProductSort currentSort={filters._sort} onChange={handleSortChange} />
-                                <FilterViewer filters={filters}  onChange={setNewFilters} categoryList={categoryList}/>
+                                <FilterViewer filters={filters} onChange={setNewFilters} categoryList={categoryList} />
                                 {loading ? <ProductSkeletonList length={12} /> : <ProductList data={productList} />}
                                 <Box className={classes.pagination}>
                                     <Pagination
