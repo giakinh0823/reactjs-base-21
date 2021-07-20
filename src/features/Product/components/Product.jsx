@@ -1,6 +1,7 @@
 import { Box, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { STATIC_HOST, THUMBNAIL_DEFAULTS } from '../../../constants';
 
 Product.propTypes = {
@@ -13,13 +14,18 @@ Product.defaultProps = {
 };
 
 function Product(props) {
+    const history = useHistory();
     const { product } = props
     const thumbnailUrl = product.thumbnail ?
         `${STATIC_HOST}${product.thumbnail?.url}`
         : THUMBNAIL_DEFAULTS;
+
+    const handleClick = () => {
+        history.push(`/products/${product.id}`)
+    }    
     return (
         <div>
-            <Box padding={1}>
+            <Box padding={1} onClick={handleClick}>
                 <Box padding={0.1}>
                     <img src={thumbnailUrl} alt={product.name} width="100%" />
                 </Box>

@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
                 color: theme.palette.primary.main,
                 cursor: 'pointer',
             },
-        }
+        },
     }
 }))
 
@@ -54,9 +54,9 @@ function FilterByCategory(props) {
                 <ul className={classes.menu}>
                     {categoryList.map((category) => (
                         <li key={category.id} onClick={() => handleCatogoryClick(category)}>
-                            <Button color="primary" fullWidth> 
+                            <Button color="primary" fullWidth>
                                 <Typography variant="body2"> {category.name}</Typography>
-                            </Button> 
+                            </Button>
                         </li>
                     ))}
                 </ul>

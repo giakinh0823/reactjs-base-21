@@ -66,9 +66,6 @@ function RegisterForm(props) {
         resolver: yupResolver(schema),
     })
 
-
-   
-
     const handleSubmit = async (values) => {
         if (onSubmit) {
             await onSubmit(values)

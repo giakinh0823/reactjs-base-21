@@ -116,7 +116,7 @@ function FilterViewer(props) {
         <div>
             <Box component="ul" className={classes.root}>
                 {visibleFilters.map((x, index)=> (
-                    <li>
+                    <li key={x.id}>
                         <Chip
                             label={x.id!==4 ? x.getLabel(filters): x.getLabel(filters, categoryList)}
                             color={x.isActive(filters) ? 'primary' : 'default'}

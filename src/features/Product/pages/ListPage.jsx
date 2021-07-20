@@ -1,15 +1,15 @@
-import { Box, Container, Grid, makeStyles, Paper } from '@material-ui/core';
-import React, { useEffect, useMemo, useState } from 'react';
-import { useHistory, useLocation } from "react-router-dom";
+import { Box, Container, Grid, LinearProgress, makeStyles, Paper } from '@material-ui/core';
+import Pagination from '@material-ui/lab/Pagination';
 import queryString from 'query-string';
+import React, { useEffect, useState } from 'react';
+import { useHistory, useLocation } from "react-router-dom";
+import categoryApi from '../../../api/categoryApi';
 import productApi from '../../../api/productApi';
+import FilterViewer from '../components/FilterViewer';
+import ProductFilters from '../components/ProductFilters';
 import ProductList from '../components/ProductList';
 import ProductSkeletonList from '../components/ProductSkeletonList';
-import Pagination from '@material-ui/lab/Pagination';
 import ProductSort from '../components/ProductSort';
-import ProductFilters from '../components/ProductFilters';
-import FilterViewer from '../components/FilterViewer';
-import categoryApi from '../../../api/categoryApi'
 
 
 
@@ -54,6 +54,7 @@ function ListPage(props) {
     //     }
     // }, [location.search])
     const [categoryList, setCategoryList] = useState([]);
+    const [loadingCategory, setLoadingCategory] = useState(true)
     const [productList, setProductList] = useState([])
     const [loading, setLoading] = useState(true);
     const [pagination, setPagination] = useState({
@@ -65,19 +66,19 @@ function ListPage(props) {
     const [filters, setFilters] = useState(() => ({
         ...queryParams,
         _page: Number.parseInt(queryParams._page) || 1,
-        _limit:Number.parseInt(queryParams._limit) || 12,
+        _limit: Number.parseInt(queryParams._limit) || 12,
         _sort: queryParams._sort || 'salePrice:ASC'
     }));
 
     useEffect(() => {
-        ;(async () => {
+        ; (async () => {
             try {
                 const response = await categoryApi.getAll();
                 setCategoryList(response.map((x) => ({
                     id: x.id,
                     name: x.name,
                 })))
-                console(categoryList);
+                setLoadingCategory(false)
             } catch (error) {
                 console.log("Fail to featch")
             }
@@ -190,6 +191,7 @@ function ListPage(props) {
                     <Grid container spacing={1}>
                         <Grid className={classes.left} item>
                             <Paper elevation={0} >
+                                {loadingCategory && <LinearProgress className={classes.linearProgress} color="primary" />}
                                 <ProductFilters filters={filters} onChange={handleFiltersChange} categoryList={categoryList} />
                             </Paper>
                         </Grid>
