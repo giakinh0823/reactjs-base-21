@@ -4,9 +4,10 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
 ProductSort.propTypes = {
-    currentSort: PropTypes.number.isRequired,
     onChange: PropTypes.func,
 };
+
+
 
 function ProductSort(props) {
     const {currentSort, onChange} = props

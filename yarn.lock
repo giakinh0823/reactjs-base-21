@@ -4555,6 +4555,11 @@
   dependencies:
     "domelementtype" "1"
 
+"dompurify@^2.3.0":
+  "integrity" "sha512-VV5C6Kr53YVHGOBKO/F86OYX6/iLTw2yVSI721gKetxpHCK/V5TaLEf9ODjRgl1KLSWRMY6cUhAbv/c+IUnwQw=="
+  "resolved" "https://registry.npmjs.org/dompurify/-/dompurify-2.3.0.tgz"
+  "version" "2.3.0"
+
 "domutils@^1.5.1", "domutils@^1.7.0":
   "integrity" "sha512-Lgd2XcJ/NjEw+7tFvfKxOzCYKZsdct5lczQ2ZaQY8Djz7pfAD3Gbp8ySJWtreII/vDlMVmxwa6pHmdxIYgttDg=="
   "resolved" "https://registry.npmjs.org/domutils/-/domutils-1.7.0.tgz"

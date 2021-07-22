@@ -89,7 +89,6 @@ function ListPage(props) {
         ; (async () => {
             try {
                 const response = await productApi.getAll(filters);
-                console.log(response)
                 setProductList(response.data)
                 setPagination(response.pagination)
             } catch (error) {
@@ -103,7 +102,6 @@ function ListPage(props) {
         ; (async () => {
             try {
                 const response = await productApi.getAll(filters);
-                console.log(response)
                 setProductList(response.data)
                 setPagination(response.pagination)
             } catch (error) {
@@ -197,6 +195,7 @@ function ListPage(props) {
                         </Grid>
                         <Grid className={classes.right} item>
                             <Paper elevation={0} >
+                                {loading && <LinearProgress color="primary"/>}
                                 <ProductSort currentSort={filters._sort} onChange={handleSortChange} />
                                 <FilterViewer filters={filters} onChange={setNewFilters} categoryList={categoryList} />
                                 {loading ? <ProductSkeletonList length={12} /> : <ProductList data={productList} />}

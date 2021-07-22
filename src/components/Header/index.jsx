@@ -1,4 +1,4 @@
-import { Box, IconButton } from '@material-ui/core';
+import { Badge, Box, IconButton } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -12,12 +12,14 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import CodeIcon from '@material-ui/icons/Code';
+import ShoppingCart from '@material-ui/icons/ShoppingCart';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useHistory } from 'react-router-dom';
 import Login from '../../features/Auth/components/Login';
 import Register from '../../features/Auth/components/Register';
 import { logout } from '../../features/Auth/userSlice';
+import { cartItemsCountSelector } from '../../features/Cart/Selectors';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -47,10 +49,13 @@ export default function Header() {
     const [open, setOpen] = useState(false);
     const [mode, setMode] = useState(MODE.LOGIN)
     const [anchorEl, setAnchorEl] = React.useState(null);
-    
+
+
     const dispatch = useDispatch();
+    const cartItemCount = useSelector(cartItemsCountSelector)
     const loginInUser = useSelector(state => state.user.current)
     const isLoggedIn = !!loginInUser.id
+    const history = useHistory()
 
 
     const handleUserClick = (event) => {
@@ -76,9 +81,14 @@ export default function Header() {
         setOpen(true);
     };
 
-    const handleClose = () => {
+    const handleClose = (reason) => {
         setOpen(false);
     };
+
+    const handleCartClick = () => {
+        history.push('/cart')
+    };
+
 
 
 
@@ -100,6 +110,11 @@ export default function Header() {
                             Products
                         </Button>
                     </NavLink>
+                    {/* <NavLink to="/cart" className={classes.link}>
+                        <Button color="inherit">
+                            Cart
+                        </Button>
+                    </NavLink> */}
 
                     <NavLink to="/todos" className={classes.link}>
                         <Button color="inherit">
@@ -125,6 +140,17 @@ export default function Header() {
                             </IconButton>
                         </>
                     )}
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="open drawer"
+                        style={{margin: "0 5px"}}
+                        onClick={handleCartClick}
+                    >
+                        <Badge badgeContent={cartItemCount} color="secondary">
+                            <ShoppingCart/>
+                        </Badge>
+                    </IconButton>
                 </Toolbar>
             </AppBar>
             <Menu
@@ -146,10 +172,11 @@ export default function Header() {
                 <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
             </Menu>
             <Dialog
-                disableBackdropClick
-                disableEscapeKeyDown
                 fullWidth
-                open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+                open={open} onClose={handleClose} aria-labelledby="form-dialog-title"
+                // disableBackdropClick
+                disableEscapeKeyDown
+                >
                 <DialogContent>
                     <DialogContentText>
                         {mode === MODE.REGISTER && (
